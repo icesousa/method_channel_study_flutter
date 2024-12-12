@@ -28,20 +28,23 @@ class FlutterError (
 /** Generated class from Pigeon that represents data sent in messages. */
 data class ButtonEvent (
   val buttonName: String? = null,
-  val timestamp: Long? = null
+  val timestamp: Long? = null,
+  val buttonKey: Long? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): ButtonEvent {
       val buttonName = pigeonVar_list[0] as String?
       val timestamp = pigeonVar_list[1] as Long?
-      return ButtonEvent(buttonName, timestamp)
+      val buttonKey = pigeonVar_list[2] as Long?
+      return ButtonEvent(buttonName, timestamp, buttonKey)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
       buttonName,
       timestamp,
+      buttonKey,
     )
   }
 }

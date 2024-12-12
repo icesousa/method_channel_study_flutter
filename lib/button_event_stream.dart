@@ -17,4 +17,5 @@ abstract class EventChannelMethods {
 class ButtonEvent {
   String? buttonName;
   int? timestamp;
+  int? buttonKey;
 }

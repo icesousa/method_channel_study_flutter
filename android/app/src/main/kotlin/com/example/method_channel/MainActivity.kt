@@ -16,7 +16,22 @@ class MainActivity: FlutterActivity() {
     private var eventSink: PigeonEventSink<ButtonEvent>? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+  super.configureFlutterEngine(flutterEngine)
 
+        StreamEventsStreamHandler.register(
+            flutterEngine.dartExecutor.binaryMessenger,
+            object : StreamEventsStreamHandler() {
+                override fun onListen(p0: Any?, sink: PigeonEventSink<ButtonEvent>) {
+                    Log.d("TAG", "OUVINDDO BOTÕES")
+
+                    eventSink = sink
+                }
+                override fun onCancel(p0: Any?) {
+                    eventSink = null
+                }
+
+            }
+        )
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             Log.d("TAG", "executando metodo")
             when (call.method) {
@@ -50,29 +65,11 @@ class MainActivity: FlutterActivity() {
             }
         }
 
-
-
-        super.configureFlutterEngine(flutterEngine)
-
-        StreamEventsStreamHandler.register(
-                flutterEngine.dartExecutor.binaryMessenger,
-                object : StreamEventsStreamHandler() {
-                    override fun onListen(p0: Any?, sink: PigeonEventSink<ButtonEvent>) {
-                        eventSink = sink
-                    }
-
-                    override fun onCancel(p0: Any?) {
-                        eventSink = null
-                    }
-                }
-        )
     }
-
-    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        return super.onKeyUp(keyCode, event)
-    }
-    // Sobrescrever o método onKeyDown para capturar eventos de botões físicos
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+
+        Log.d("TAG", "ONKEYDOWN TENTANDO DETECTAR BOTÃO APERTADO ${keyCode}")
+
         // Capturar o evento do botão e enviar para o Flutter
         val buttonName = when (keyCode) {
             KeyEvent.KEYCODE_VOLUME_UP -> "VOLUME_UP"
@@ -83,16 +80,26 @@ class MainActivity: FlutterActivity() {
             else -> "UNKNOWN_${keyCode}"
         }
 
-        eventSink?.let { sink ->
-            val buttonEvent = ButtonEvent(
-                    buttonName = buttonName,
-                    timestamp = System.currentTimeMillis()
-            )
-            sink.success(buttonEvent)
-        }
+        val buttonEvent = ButtonEvent(
+            buttonName = buttonName,
+            timestamp = System.currentTimeMillis(),
+            buttonKey = keyCode.toLong());
+
+
+        // Add debug logging here
+        Log.d("TAG", "Attempting to send event: $buttonName")
+        eventSink?.let {
+            Log.d("TAG", "EventSink is available, sending event")
+            it.success(buttonEvent)
+        } ?: Log.d("TAG", "EventSink is null!")
+
+
 
         // Retorna false para permitir que o sistema também processe o evento
         // ou true para consumir o evento aqui
         return super.onKeyDown(keyCode, event)
     }
+
+
+
 }

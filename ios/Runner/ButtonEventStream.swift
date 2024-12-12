@@ -42,22 +42,26 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
 struct ButtonEvent {
   var buttonName: String? = nil
   var timestamp: Int64? = nil
+  var buttonKey: Int64? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> ButtonEvent? {
     let buttonName: String? = nilOrValue(pigeonVar_list[0])
     let timestamp: Int64? = nilOrValue(pigeonVar_list[1])
+    let buttonKey: Int64? = nilOrValue(pigeonVar_list[2])
 
     return ButtonEvent(
       buttonName: buttonName,
-      timestamp: timestamp
+      timestamp: timestamp,
+      buttonKey: buttonKey
     )
   }
   func toList() -> [Any?] {
     return [
       buttonName,
       timestamp,
+      buttonKey,
     ]
   }
 }

@@ -12,16 +12,20 @@ class ButtonEvent {
   ButtonEvent({
     this.buttonName,
     this.timestamp,
+    this.buttonKey,
   });
 
   String? buttonName;
 
   int? timestamp;
 
+  int? buttonKey;
+
   Object encode() {
     return <Object?>[
       buttonName,
       timestamp,
+      buttonKey,
     ];
   }
 
@@ -30,6 +34,7 @@ class ButtonEvent {
     return ButtonEvent(
       buttonName: result[0] as String?,
       timestamp: result[1] as int?,
+      buttonKey: result[2] as int?,
     );
   }
 }

@@ -5,13 +5,14 @@ import 'package:method_channel/buttonsimulator.dart';
 import 'src/generated/button_event_stream.g.dart';
 
 void main() {
-  void main() {
+    WidgetsFlutterBinding.ensureInitialized(); // Add this
+
     streamEvents().listen((event) {
       print(
           'Botão físico pressionado: ${event.buttonName} em ${event.timestamp}');
       // Trate o evento conforme necessário
     });
-  }
+  
 
   runApp(const MainApp());
 }
